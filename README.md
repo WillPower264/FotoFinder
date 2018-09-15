@@ -7,6 +7,7 @@ First make sure you have npm installed.
 Then, run
 ```
 npm install express
+npm install request
 ```
 Then, run
 ```
