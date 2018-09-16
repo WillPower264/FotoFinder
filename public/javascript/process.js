@@ -35,7 +35,7 @@ function submitPictures() {
         var list = JSON.parse(data);
         var urls = Object.keys(list).sort(function(a,b){return list[b]-list[a]})
         for(var i = 0; i < urls.length; i++) {
-          createCard(urls[i], "Face Score: " + JSON.parse(data)[urls[i]]);
+          createCard(urls[i], "Face Score: " + (JSON.parse(data)[urls[i]] + 2) * 25 + "%");
         }
 
       }
