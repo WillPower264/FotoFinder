@@ -17,6 +17,7 @@ var port = process.env.PORT || 3000;
 app.use(require("express").static("public"));
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
+app.use(require('serve-favicon')(__dirname + '/public/images/favicon.ico'));
 
 // the default directory goes straight to home page
 app.get("/", function(req, res) {
@@ -58,10 +59,8 @@ app.post("/processImages", function(req, res) {
         // populate the pairs with the key value pairs
         pairs[identifier] = getImageScore(body);
         // check if the pairs is the max length. If so, res.send it
-        console.log("pairs: " + Object.keys(pairs).length + ", total: " + total);
         if(Object.keys(pairs).length == total) {
-          console.log(pairs);
-          res.send(JSON.stringify(sortDictionary(pairs)));
+          res.send(JSON.stringify(pairs));
         }
       });
   }
@@ -86,21 +85,6 @@ function getFaceScore(face){
     sum -= attr.noise.value
     console.log("Face score: " + sum)
     return sum
-}
-
-function sortDictionary(dictionary) {
-    console.log();
-    var keys = Object.keys(dictionary);
-    var maxValue = dictionary[keys[0]];
-    var maxUrl = keys[0];
-    for(var url in keys) {
-      if(dictionary[url] > maxValue) {
-        maxValue = dictionary[url];
-        maxUrl = url;
-      }
-    }
-
-    return dictionary;
 }
 
 // start the server
