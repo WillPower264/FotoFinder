@@ -1,15 +1,13 @@
-function processImage() {
-    // Replace <Subscription Key> with your valid subscription key.
-    var subscriptionKey = "3d99d749773f4c2aae14456593398b5d";
+function processImages(urls) {
+    var sums = []
+    for (let x in urls) {
+        sums.append(calculateScore(x))
+    }    
+    return urls[indexOfMax(sums)]
+};
 
-    // NOTE: You must use the same region in your REST call as you used to
-    // obtain your subscription keys. For example, if you obtained your
-    // subscription keys from westus, replace "westcentralus" in the URL
-    // below with "westus".
-    //
-    // Free trial subscription keys are generated in the westcentralus region.
-    // If you use a free trial subscription key, you shouldn't need to change
-    // this region.
+function calculateScore(imageUrl) {
+    var subscriptionKey = "abe8bd6bf09d46399f42bcb27097d98c";
     var uriBase =
         "https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect";
 
@@ -17,14 +15,8 @@ function processImage() {
     var params = {
         "returnFaceId": "true",
         "returnFaceLandmarks": "false",
-        "returnFaceAttributes":
-            "age,gender,headPose,smile,facialHair,glasses,emotion," +
-            "hair,makeup,occlusion,accessories,blur,exposure,noise"
+        "returnFaceAttributes": "smile,emotion,blur,exposure,noise"
     };
-
-    // Display the image.
-    var sourceImageUrl = document.getElementById("inputImage").value;
-    document.querySelector("#sourceImage").src = sourceImageUrl;
 
     // Perform the REST API call.
     $.ajax({
@@ -39,12 +31,20 @@ function processImage() {
         type: "POST",
 
         // Request body.
-        data: '{"url": ' + '"' + sourceImageUrl + '"}',
+        data: '{"url": ' + '"' + imageUrl + '"}',
     })
 
     .done(function(data) {
         // Show formatted JSON on webpage.
-        $("#responseTextArea").val(JSON.stringify(data, null, 2));
+
+        console.log(data);
+        console.log(data.length);
+        let sum = 0
+        for (let x of data) {
+            sum += getScore(x)
+        }
+        console.log(sum / data.length)
+        return sum / data.length
     })
 
     .fail(function(jqXHR, textStatus, errorThrown) {
@@ -57,4 +57,32 @@ function processImage() {
                     jQuery.parseJSON(jqXHR.responseText).error.message;
         alert(errorString);
     });
-};
+}
+
+function getScore(face){
+    var attr = face.faceAttributes;
+    var sum = 0
+    sum += attr.smile
+    sum += attr.emotion.happiness
+    sum -= attr.blur.value
+    sum -= attr.noise.value
+    console.log("Face score: " + sum)
+    return sum
+}
+
+function indexOfMax(arr) {
+    if (arr.length === 0)
+        return -1;
+
+    var max = arr[0];
+    var maxIndex = 0;
+
+    for (var i = 1; i < arr.length; i++) {
+        if (arr[i] > max) {
+            maxIndex = i;
+            max = arr[i];
+        }
+    }
+
+    return maxIndex;
+}
