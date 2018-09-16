@@ -35,7 +35,8 @@
           contentType: 'application/json',
           data: JSON.stringify(urls),
           success: function(data){
-            var urls = Object.keys(JSON.parse(data));
+            var list = JSON.parse(data);
+            var urls = Object.keys(list).sort(function(a,b){return list[b]-list[a]})
             for(var i = 0; i < urls.length; i++) {
               var title = document.createElement("h1");
               title.innerHTML = "Face Score: " + JSON.parse(data)[urls[i]];
