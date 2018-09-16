@@ -32,6 +32,7 @@ app.post("/processImages", function(req, res) {
   // urls contains an array of urls
   // pairs will contain key value pairs of urls and their score
   var pairs = {};
+  var total = urls.length;
 
   for (var x = 0; x < urls.length; x++) {
       // we will make an ajax request for each of the scoredImages
@@ -57,9 +58,10 @@ app.post("/processImages", function(req, res) {
         // populate the pairs with the key value pairs
         pairs[identifier] = getImageScore(body);
         // check if the pairs is the max length. If so, res.send it
-        if(pairs.length == urls.length) {
+        console.log("pairs: " + Object.keys(pairs).length + ", total: " + total);
+        if(Object.keys(pairs).length == total) {
           console.log(pairs);
-          res.send("urls[indexOfMax(sums)]");
+          res.send(JSON.stringify(sortDictionary(pairs)));
         }
       });
   }
@@ -86,21 +88,19 @@ function getFaceScore(face){
     return sum
 }
 
-function indexOfMax(arr) {
-    if (arr.length === 0)
-        return -1;
-
-    var max = arr[0];
-    var maxIndex = 0;
-
-    for (var i = 1; i < arr.length; i++) {
-        if (arr[i] > max) {
-            maxIndex = i;
-            max = arr[i];
-        }
+function sortDictionary(dictionary) {
+    console.log();
+    var keys = Object.keys(dictionary);
+    var maxValue = dictionary[keys[0]];
+    var maxUrl = keys[0];
+    for(var url in keys) {
+      if(dictionary[url] > maxValue) {
+        maxValue = dictionary[url];
+        maxUrl = url;
+      }
     }
 
-    return maxIndex;
+    return dictionary;
 }
 
 // start the server

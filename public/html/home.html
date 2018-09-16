@@ -27,7 +27,7 @@
           urls.push({str, i});
         }
         // urls should have all of the submitted urls
-        console.log(urls);
+
 
         $.ajax({
           url: '/processImages',
@@ -37,7 +37,7 @@
           success: function(data){
             var img = document.createElement("img");
             img.src = data;
-            document.getElementById("bestImage").empty();
+            console.log(data);
             document.getElementById("bestImage").append(img);
           }
         });
