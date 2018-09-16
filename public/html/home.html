@@ -35,10 +35,16 @@
           contentType: 'application/json',
           data: JSON.stringify(urls),
           success: function(data){
-            var img = document.createElement("img");
-            img.src = data;
-            console.log(data);
-            document.getElementById("bestImage").append(img);
+            var urls = Object.keys(JSON.parse(data));
+            for(var i = 0; i < urls.length; i++) {
+              var title = document.createElement("h1");
+              title.innerHTML = "Face Score: " + JSON.parse(data)[urls[i]];
+              document.getElementById("bestImage").append(title);
+              var img = document.createElement("img");
+              img.src = urls[i];
+              document.getElementById("bestImage").append(img);
+            }
+
           }
         });
 
