@@ -4,20 +4,45 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
   </head>
   <body>
-    <button onclick="addPictureInput">Add Picture</button>
+    <button onclick="return addPictureInput()">Add Picture</button>
     <div id="inputArea">
 
     </div>
-    <button onclick="submitPictures"></button>
+    <button onclick="return submitPictures()">Submit</button>
+    <div id="bestImage">
+    </div>
 
     <script type="text/javascript">
-    // var inputCount = 0;
-    //   function addPictureInput() {
-    //     var input = document.createElement("input");
-    //     input.id = "input" + inputCount;
-    //     inputCount++;
-    //     document.getElementById("inputArea").append(input);
-    //   }
+    var inputCount = 0;
+      function addPictureInput() {
+        var input = document.createElement("input");
+        input.id = "input" + inputCount;
+        inputCount++;
+        document.getElementById("inputArea").append(input);
+      }
+      function submitPictures() {
+        var urls = [];
+        for(var i = 0; i < inputCount; i++) {
+          var str = document.getElementById("input" + i).value;
+          urls.push({str, i});
+        }
+        // urls should have all of the submitted urls
+        console.log(urls);
+
+        $.ajax({
+          url: '/processImages',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify(urls),
+          success: function(data){
+            var img = document.createElement("img");
+            img.src = data;
+            document.getElementById("bestImage").append(img);
+          }
+        });
+
+      }
+
     </script>
   </body>
 </html>
