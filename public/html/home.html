@@ -37,6 +37,7 @@
           success: function(data){
             var img = document.createElement("img");
             img.src = data;
+            document.getElementById("bestImage").empty();
             document.getElementById("bestImage").append(img);
           }
         });
