@@ -21,7 +21,8 @@
     "express": "^4.16.3",
     "jquery": "^3.3.1",
     "jquery-param": "^1.0.1",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "serve-favicon": "^2.5.0"
   },
   "devDependencies": {}
 }
